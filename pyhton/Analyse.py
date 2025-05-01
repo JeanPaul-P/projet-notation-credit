@@ -13,8 +13,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
 #%%
 #CHARGEMENT DES DONNEES
+
 # %%
 #Chargement des datas
 df = pd.read_excel(r"C:\Users\Jppok\OneDrive\Documents\Projet DA_Portfolio\data\CorporateCreditRating.xlsx")
@@ -34,6 +36,7 @@ print(df_Sector.head())
 
 #Vérifier la structure des données
 print(df_Sector.info())
+
 
 #%%
 #PREPARATION DES DONNEES
@@ -116,6 +119,7 @@ plt.title("Distribution des notations de crédit")
 plt.xlabel("Notation")
 plt.ylabel("Nombre d'entreprises")
 plt.show()
+
 #%%
 #Analyse des ratios financiers 
 #%%
@@ -351,6 +355,31 @@ plt.show()
 #%%
 #SECTEUR
 #%%
+#Liste des secteurs uniques
+df["Sector"].unique()
+
+#%%
+#Renommer les secteurs
+sector_names = {
+    "BusEq": "Business Equipment",
+    "Chems": "Chemicals",
+    "Durbl": "Durables",
+    "Enrgy": "Energy",
+    "Hlth": "Health",
+    "Manuf": "Manufacturing",
+    "Money": "Money",
+    "NoDur": "Non-Durables",
+    "Other": "Other",
+    "Shops": "Shops",
+    "Telcm": "Telecommunications",
+    "Utils": "Utilities"}
+
+df["Sector"] = df["Sector"].replace(sector_names)
+
+#Vérification des changements
+df["Sector"].unique()
+
+#%%
 #Regroupement rating par secteur
 sector_rating = df.groupby(['Sector', 'Rating']).size().unstack().fillna(0)
 
@@ -366,6 +395,12 @@ plt.figtext(0.5, -0.05,
             wrap=True, horizontalalignment="center", fontsize=10)
 plt.show()
 
+
+#%% 
+#"Binary Rating" = Investment Grade ou Non-Investment Grade 
+df.rename(columns={'Binary Rating': 'Investment Grade'}, inplace=True)
+
+df.columns
 #%%
 #Répartition des entreprise IG par secteur
 sector_IG = df.groupby(['Sector', 'Investment Grade']).size().unstack().fillna(0)
