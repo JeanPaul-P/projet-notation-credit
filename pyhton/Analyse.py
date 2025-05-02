@@ -13,13 +13,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
 #%%
 #CHARGEMENT DES DONNEES
 
 # %%
 #Chargement des datas
-df = pd.read_excel(r"C:\Users\Jppok\OneDrive\Documents\Projet DA_Portfolio\data\CorporateCreditRating.xlsx")
+df = pd.read_excel(r"C:\Users\Jppok\venv\test_pandas\Projet DA_Portfolio\data\CorporateCreditRating.xlsx")
 
 #Afficher les 1ères lignes
 print(df.head())
@@ -29,7 +28,7 @@ print(df.info())
 
 #%%
 #Chargement de la table détail des secteurs 
-df_Sector = pd.read_excel(r"C:\Users\Jppok\OneDrive\Documents\Projet DA_Portfolio\data/Sector_Table.xlsx")
+df_Sector = pd.read_excel(r"C:\Users\Jppok\venv\test_pandas\Projet DA_Portfolio\data\Sector_Table.xlsx")
 
 #Afficher les 1ères lignes
 print(df_Sector.head())
@@ -354,31 +353,6 @@ plt.show()
 
 #%%
 #SECTEUR
-#%%
-#Liste des secteurs uniques
-df["Sector"].unique()
-
-#%%
-#Renommer les secteurs
-sector_names = {
-    "BusEq": "Business Equipment",
-    "Chems": "Chemicals",
-    "Durbl": "Durables",
-    "Enrgy": "Energy",
-    "Hlth": "Health",
-    "Manuf": "Manufacturing",
-    "Money": "Money",
-    "NoDur": "Non-Durables",
-    "Other": "Other",
-    "Shops": "Shops",
-    "Telcm": "Telecommunications",
-    "Utils": "Utilities"}
-
-df["Sector"] = df["Sector"].replace(sector_names)
-
-#Vérification des changements
-df["Sector"].unique()
-
 #%%
 #Regroupement rating par secteur
 sector_rating = df.groupby(['Sector', 'Rating']).size().unstack().fillna(0)
