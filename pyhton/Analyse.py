@@ -675,7 +675,7 @@ print(df_normalized.columns)
 
 # %%
 #Sélection des colonnes à exporter
-export_colonnes1 = ["Corporation", "Sector", "SubSector", "Industry", 
+export_colonnes1 = ["SIC Code","Corporation", "Sector", "SubSector", "Industry", 
                    "Rating Agency", "Rating", "Rating_Score","Investment Grade", 
                    "Current Ratio", "Debt/Equity Ratio", 
                    "Net Profit Margin", "ROE - Return On Equity", 
