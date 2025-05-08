@@ -565,7 +565,6 @@ df["Risk_Score"] = (
     df["ROE - Return On Equity"] * weights["ROE - Return On Equity"]
 )
 
-# Afficher les premiers scores
 print(df[["Corporation", "Risk_Score"]].head())
 
 #%%
@@ -580,6 +579,23 @@ plt.xlabel("Score de risque")
 plt.ylabel("Fréquence")
 plt.grid(True)
 plt.show()
+
+#%%
+#Classification du Risk_Score
+q1 = df["Risk_Score"].quantile(0.25)
+q3 = df["Risk_Score"].quantile(0.75)
+
+def classify_risk(score):
+    if score <= q1:
+        return "Faible"
+    elif score <= q3:
+        return "Modéré"
+    else:
+        return "Élevé"
+
+df["Risk_Category"] = df["Risk_Score"].apply(classify_risk)
+
+print(df[["Corporation", "Risk_Score", "Risk_Category"]].head())
 
 #%%
 #Création du score risque secteur (Normalisé)
@@ -600,14 +616,12 @@ print(sector_medians)
 sector_medians_normalized = sector_medians.copy()
 sector_medians_normalized[ratios] = scaler.fit_transform(sector_medians[ratios])
 
-# Vérifier les données normalisées
 print(sector_medians_normalized)
 
 #%%
-# Calcul de la notation moyenne (médiane) par secteur
+#Calcul de la notation moyenne (médiane) par secteur
 sector_medians_normalized["Rating_Score"] = df.groupby("Sector")["Rating_Score"].median()
 
-# Vérifier les notations moyennes par secteur
 print(sector_medians_normalized)
 
 #%%
@@ -660,6 +674,23 @@ df_normalized["Risk_Score"] = (
 print(df_normalized[["Corporation", "Risk_Score"]].head())
 
 #%%
+#Classification du Risk_Score
+q1 = df_normalized["Risk_Score"].quantile(0.25)
+q3 = df_normalized["Risk_Score"].quantile(0.75)
+
+def classify_risk(score):
+    if score <= q1:
+        return "Faible"
+    elif score <= q3:
+        return "Modéré"
+    else:
+        return "Élevé"
+
+df_normalized["Risk_Category"] = df_normalized["Risk_Score"].apply(classify_risk)
+
+print(df_normalized[["Corporation", "Risk_Score", "Risk_Category"]].head())
+
+#%%
 #Comparaison des scores de risque
 #Ajout des scores de risque sectoriels à df_normalized
 df_normalized = pd.merge(df_normalized, sector_medians_normalized[["Sector_Risk_Score"]], 
@@ -667,21 +698,61 @@ df_normalized = pd.merge(df_normalized, sector_medians_normalized[["Sector_Risk_
 
 df_normalized["Risk_Comparaison"] = df_normalized["Risk_Score"] - df_normalized["Sector_Risk_Score"]
 
+#%%
+# Indicateur de performance par rapport au secteur
+df_normalized["Performance_vs_Sector"] = df_normalized["Risk_Comparaison"].apply(lambda x: "Au-dessus" if x > 0 else "En-dessous")
+
+#%%
+df
+
+#%%
+#Conversion Rating Date en chaîne de caractères
+df["Rating Date"] = df["Rating Date"].astype(str)
+df_normalized["Rating Date"] = df_normalized["Rating Date"].astype(str)
+
+#Clé composite dans les deux DataFrames
+df["Composite_Key"] = df["CIK"].astype(str) + "_" + df["Corporation"] + "_" + df["Rating Date"]
+df_normalized["Composite_Key"] = df_normalized["CIK"].astype(str) + "_" + df_normalized["Corporation"] + "_" + df_normalized["Rating Date"]
+
+#Vérification de la clé composite
+print(df["Composite_Key"].head())
+print(df_normalized["Composite_Key"].head())
+
+#%%
+#Doublons de la clé composite dans df
+print("Doublons dans la clé composite (table non normalisée) :", df["Composite_Key"].duplicated().sum())
+
+#Doublons de la clé composite dans df_normalized
+print("Doublons dans la clé composite (table normalisée) :", df_normalized["Composite_Key"].duplicated().sum())
+
+#%%
+#Vérifier les valeurs uniques dans les deux tables
+unique_keys_df = set(df["Composite_Key"].unique())
+unique_keys_df_normalized = set(df_normalized["Composite_Key"].unique())
+
+
+print("Clés présentes dans df mais pas dans df_normalized :", unique_keys_df - unique_keys_df_normalized)
+print("Clés présentes dans df_normalized mais pas dans df :", unique_keys_df_normalized - unique_keys_df)
+
 # %%
 #EXPORT DES DONNEES
 #%%
 print(df.columns)
 print(df_normalized.columns)
 
+#%%
+print(df.info())
+print(df_normalized.info())
+
 # %%
 #Sélection des colonnes à exporter
-export_colonnes1 = ["SIC Code","Corporation", "Sector", "SubSector", "Industry", 
-                   "Rating Agency", "Rating", "Rating_Score","Investment Grade", 
+export_colonnes1 = ["CIK","Corporation", "SIC Code", "Sector", "SubSector", "Industry", 
+                   "Rating Agency", "Rating", "Rating Date", "Rating_Score","Investment Grade", 
                    "Current Ratio", "Debt/Equity Ratio", 
                    "Net Profit Margin", "ROE - Return On Equity", 
-                   "Risk_Score"]
+                   "Risk_Score", "Risk_Category", "Composite_Key"]
 
-export_colonnes2 = export_colonnes1 + ["Sector_Risk_Score", "Risk_Comparaison"]
+export_colonnes2 = export_colonnes1 + ["Sector_Risk_Score", "Risk_Comparaison", "Performance_vs_Sector"]
 
 #Export des données non normalisées
 df[export_colonnes1].to_excel("CorporateCredit_NonNormalized.xlsx", index=False)
