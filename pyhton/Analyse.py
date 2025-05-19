@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 #%%
- #CHARGEMENT DES DONNEES
+  #CHARGEMENT DES DONNEES
 
 # %%
 #Chargement des datas
@@ -475,6 +475,23 @@ sector_ratios_median = df.groupby('Sector')[["Current Ratio", "Debt/Equity Ratio
 # Visualisation avec heatmap
 sns.heatmap(sector_ratios_median, annot=True, cmap='coolwarm')
 plt.title("Médianes des ratios financiers par secteur :")
+plt.show()
+
+#%% Distribution du ROE par secteur avec histogrammes
+sectors = df["Sector"].unique()  
+#Liste des secteurs uniques
+plt.figure(figsize=(15, 12))
+
+# Création d'un histogramme pour chaque secteur
+for i, sector in enumerate(sectors, 1):
+    plt.subplot((len(sectors) // 3) + 1, 3, i)  # Organisation en sous-graphiques
+    sector_data = df[df["Sector"] == sector]  # Filtrer les données par secteur
+    plt.hist(sector_data["ROE - Return On Equity"], bins=20, alpha=0.7, color="blue", edgecolor="black")
+    plt.title(f"ROE - {sector}")
+    plt.xlabel("ROE - Return On Equity")
+    plt.ylabel("Fréquence")
+
+plt.tight_layout()
 plt.show()
 
 #%%
