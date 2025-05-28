@@ -9,16 +9,18 @@
 #%%
 #Importation des bibliothèques
 import pandas as pd
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 #%%
   #CHARGEMENT DES DONNEES
-
 # %%
+#Chemin relatif 
+data_path = os.path.join("data", "CorporateCreditRating.xlsx")
 #Chargement des datas
-df = pd.read_excel(r"C:\Users\Jppok\venv\test_pandas\Projet DA_Portfolio\data\CorporateCreditRating.xlsx")
+df = pd.read_excel(data_path)
 
 #Afficher les 1ères lignes
 print(df.head())
@@ -27,8 +29,10 @@ print(df.head())
 print(df.info())
 
 #%%
+#Chemin relatif 
+sector_path = os.path.join("data", "Sector_Table.xlsx")
 #Chargement de la table détail des secteurs 
-df_Sector = pd.read_excel(r"C:\Users\Jppok\venv\test_pandas\Projet DA_Portfolio\data\Sector_Table.xlsx")
+df_Sector = pd.read_excel(sector_path)
 
 #Afficher les 1ères lignes
 print(df_Sector.head())
