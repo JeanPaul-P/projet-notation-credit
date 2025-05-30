@@ -1039,8 +1039,11 @@ print(f"R² moyen : {np.mean(r2_scores_tree):.4f}")
 print(f"Écart-type du R² : {np.std(r2_scores_tree):.4f}")
 
 #%%
-#L'ajout de nouvelles variables  dans X rend le modèle moins pertinent
-#%% Features Importance
+#Meilleure performancce globale : baisse du MSE et RMSE, hausse du R²
+#Modèle plus stable baisse des écarts-types
+#%% 
+#Features Importance
+
 #Importance des variables
 importances = tree_model.feature_importances_
 
@@ -1127,9 +1130,7 @@ print(f"R² moyen : {np.mean(r2_scores_tree):.4f}")
 print(f"Écart-type du R² : {np.std(r2_scores_tree):.4f}")
 
 #%%
-#Meilleure performancce globale : baisse du MSE et RMSE, hausse du R²
-#Modèle plus stable baisse des écarts-types
-
+#L'ajout de nouvelles variables  dans X rend le modèle moins pertinent
 #%% Modèle de Gradient Boosting
 from sklearn.ensemble import GradientBoostingRegressor
 
@@ -1198,13 +1199,13 @@ plt.show()
 #%% Modèle XGBoost
 from xgboost import XGBRegressor
 
-# Initialiser la validation croisée avec 5 plis
+#Initialiser la validation croisée avec 5 plis
 kf = KFold(n_splits=5, shuffle=True, random_state=42)
 mse_errors_xgb = []
 rmse_errors_xgb = []
 r2_scores_xgb = []
 
-# Modèle XGBoost
+#Modèle XGBoost
 xgb_model = XGBRegressor(random_state=42, n_estimators=100, learning_rate=0.1, max_depth=5)
 
 for train_index, test_index in kf.split(X):
@@ -1228,7 +1229,7 @@ for train_index, test_index in kf.split(X):
     rmse_errors_xgb.append(rmse_xgb)
     r2_scores_xgb.append(r2_xgb)
 
-# Résultats de la validation croisée pour XGBoost
+#Résultats de la validation croisée pour XGBoost
 print("\nValidation croisée (XGBoost) :")
 print(f"Erreur quadratique moyenne (MSE) moyenne : {np.mean(mse_errors_xgb):.4f}")
 print(f"Écart-type du MSE : {np.std(mse_errors_xgb):.4f}")
@@ -1239,7 +1240,6 @@ print(f"Écart-type du R² : {np.std(r2_scores_xgb):.4f}")
 
 #%%
 #GradientBoost légèrement plus performant que XGBoost
-
 #%% SCORE RISQUE
 #%% Extraction des pondérations pour SCORE RISQUE 
 #Importance des variables à partir du modèle Gradient Boosting
