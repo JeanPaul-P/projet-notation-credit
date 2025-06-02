@@ -1308,10 +1308,10 @@ print(df_normalized[["Corporation", "New_Risk_Score", "SectorRisk_Score", "Risk_
 df_normalized[["New_Risk_Score"]].head(100)
 
 #%%
-#Comparaison des distributions
+#Distribution du Sector Risk Score
 plt.figure(figsize=(12, 6))
 sns.histplot(df_normalized["SectorRisk_Score"], bins=30, kde=True, color="green", label="New Risk Score", alpha=0.6)
-plt.title("Comparaison des distributions des scores de risque")
+plt.title("Distribution du Sector Risk Score")
 plt.xlabel("Score de risque")
 plt.ylabel("Fréquence")
 plt.legend()
